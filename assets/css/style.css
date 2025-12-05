@@ -1,0 +1,61 @@
+body {
+    background: #f4f6f9;
+    font-family: Arial, sans-serif;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #0f1f3d;
+    color: white;
+    position: fixed;
+    padding: 20px 15px;
+}
+
+.sidebar .nav-link {
+    color: #c7c9d1;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background: #182c4f;
+    color: #fff;
+}
+
+.sidebar-footer {
+    border-top: 1px solid #26426b;
+    padding-top: 10px;
+}
+
+/* MAIN CONTENT */
+.main-content {
+    margin-left: 260px;
+    padding: 20px;
+}
+
+/* STAT CARDS */
+.stat-card {
+    border-left: 5px solid #0f62fe;
+}
+
+.placeholder-chart {
+    height: 200px;
+    background: #e0e4eb;
+    border-radius: 10px;
+}
+
+/* USER PROFILE */
+.profile-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #1f3c88;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
