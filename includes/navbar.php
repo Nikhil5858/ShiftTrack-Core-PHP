@@ -15,9 +15,13 @@
         <i class="bi bi-list" style="font-size: 1.6rem;"></i>
     </button>
 
-    <form class="d-flex me-auto search-box mt-1">
-        <input class="form-control" type="search" placeholder="Search If you want...">
+    <form class="search-box-wrapper d-flex me-auto mt-1">
+        <div class="search-input-container">
+            <i class="bi bi-search search-icon"></i>
+            <input class="form-control search-input" type="search" placeholder="Search If you want...">
+        </div>
     </form>
+
 
     <ul class="navbar-nav ms-auto">
         <li class="nav-item ms-3">
@@ -30,3 +34,4 @@
 </nav>
 
 <script src="./assets/js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
