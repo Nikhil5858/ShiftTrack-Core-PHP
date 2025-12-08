@@ -1,13 +1,25 @@
-<!-- navbar.php -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShiftTrack - Employee Shift & Attendance Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">
-    <form class="d-flex me-auto search-box">
-        <input class="form-control" type="search" placeholder="Search employees, departments...">
+    <button class="btn btn-outline-secondary d-lg-none me-3" id="menu-toggle">
+        <i class="bi bi-list" style="font-size: 1.6rem;"></i>
+    </button>
+
+    <form class="d-flex me-auto search-box mt-1">
+        <input class="form-control" type="search" placeholder="Search If you want...">
     </form>
 
     <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-            <a class="nav-link" href="#"><i class="bi bi-bell"></i></a>
-        </li>
         <li class="nav-item ms-3">
             <div class="user-profile d-flex align-items-center">
                 <div class="profile-circle">AD</div>
@@ -16,3 +28,5 @@
         </li>
     </ul>
 </nav>
+
+<script src="./assets/js/main.js"></script>
