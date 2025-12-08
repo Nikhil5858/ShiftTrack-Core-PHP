@@ -1,5 +1,8 @@
-<?php include './includes/navbar.php'; ?>
-<?php include './includes/sidebar.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/ShiftTrack/config.php';?>
+<?php include ROOT_PATH . 'includes/navbar.php'; ?>
+<?php include ROOT_PATH . 'includes/sidebar.php'; ?>
+<?php include ROOT_PATH . 'database.php'; ?>
+
 
 <div class="main-content">
     <div class="container-fluid">
@@ -51,42 +54,49 @@
                         <th>Employee</th>
                         <th>Department</th>
                         <th>Contact</th>
-                        <th>Current Shift</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>
-                            <div class="d-flex align-items-center gap-3">
-                                <div>
-                                    <strong>John Smith</strong><br>
-                                    <small class="text-muted">john.smith@company.com</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td><span class="badge bg-light text-dark">Engineering</span></td>
-                        <td>+1 234-567-8901</td>
-                        <td><span class="badge bg-success-subtle text-success">Morning</span></td>
-                        <td>
-                            <button class="btn btn-outline-primary btn-sm edit-btn"
-                                data-id="1"
-                                data-name="John Smith"
-                                data-email="john.smith@company.com"
-                                data-phone="+1 234-567-8901"
-                                data-dept="Engineering">
-                                <i class="bi bi-pencil"></i>
-                            </button>
+                    <?php
+                            $query = $connection->query(
+                                "SELECT e.*, d.name AS department_name 
+                                     FROM employees e 
+                                     JOIN departments d ON e.department_id = d.id
+                                     ORDER BY e.id DESC");
 
-                            <button class="btn btn-outline-danger btn-sm delete-btn"
-                                data-id="1"
-                                data-name="John Smith">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
+                            foreach ($query as $row){?>
+                                <tr>
+                                <td><?= $row['id'] ?></td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div>
+                                            <strong><?= $row['name'] ?></strong><br>
+                                            <small class="text-muted"><?= $row['email'] ?></small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-light text-dark"><?= $row['department_name'] ?></span></td>
+                                <td><?= $row['phone'] ?></td>
+                                <td>
+                                    <button class="btn btn-outline-primary btn-sm edit-btn"
+                                        data-id="<?= $row['id'] ?>"
+                                        data-name="<?= $row['name'] ?>"
+                                        data-email="<?= $row['email'] ?>"
+                                        data-phone="<?= $row['phone'] ?>"
+                                        data-dept="<?= $row['department_id'] ?>">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+
+                                    <button class="btn btn-outline-danger btn-sm delete-btn"
+                                        data-id="<?= $row['id'] ?>"
+                                        data-name="<?= $row['name'] ?>">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php } ?>
 
                 </tbody>
             </table>
@@ -106,7 +116,7 @@
                         <div class="modal-body">
 
                             <label class="form-label">Full Name</label>
-                            <input type="text" name="fullname" class="form-control mb-3" required>
+                            <input type="text" name="name" class="form-control mb-3" required>
 
                             <label class="form-label">Email</label>
                             <input type="email" name="email" class="form-control mb-3" required>
@@ -114,13 +124,16 @@
                             <label class="form-label">Phone</label>
                             <input type="text" name="phone" class="form-control mb-3" required>
 
-                            <label class="form-label">Department</label>
                             <select name="department" class="form-select" required>
-                                <option>Engineering</option>
-                                <option>Human Resources</option>
-                                <option>Marketing</option>
-                                <option>Operations</option>
+                                <option disabled selected>Select Department</option>
+                                <?php
+                                    $dep = $connection->query("SELECT id,name FROM departments ORDER BY name ASC");
+                                    foreach ($dep as $d) {
+                                        echo "<option value='{$d['id']}'>{$d['name']}</option>";
+                                    }
+                                ?>
                             </select>
+
 
                         </div>
 
@@ -150,7 +163,7 @@
                             <input type="hidden" name="id" id="editId">
 
                             <label class="form-label">Full Name</label>
-                            <input type="text" name="fullname" id="editName" class="form-control mb-3" required>
+                            <input type="text" name="name" id="editName" class="form-control mb-3" required>
 
                             <label class="form-label">Email</label>
                             <input type="email" name="email" id="editEmail" class="form-control mb-3" required>
@@ -160,11 +173,14 @@
 
                             <label class="form-label">Department</label>
                             <select name="department" id="editDept" class="form-select" required>
-                                <option>Engineering</option>
-                                <option>Human Resources</option>
-                                <option>Marketing</option>
-                                <option>Operations</option>
+                                <?php
+                                    $dep = $connection->query("SELECT id, name FROM departments ORDER BY name ASC");
+                                    foreach ($dep as $d) {
+                                        echo "<option value='{$d['id']}'>{$d['name']}</option>";
+                                    }
+                                ?>
                             </select>
+
 
                         </div>
 
@@ -212,17 +228,17 @@
 </div>
 <script>
     document.querySelectorAll(".edit-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
+        btn.addEventListener("click", () => {
 
-        document.getElementById("editId").value = btn.dataset.id;
-        document.getElementById("editName").value = btn.dataset.name;
-        document.getElementById("editEmail").value = btn.dataset.email;
-        document.getElementById("editPhone").value = btn.dataset.phone;
-        document.getElementById("editDept").value = btn.dataset.dept;
+            document.getElementById("editId").value = btn.dataset.id;
+            document.getElementById("editName").value = btn.dataset.name;
+            document.getElementById("editEmail").value = btn.dataset.email;
+            document.getElementById("editPhone").value = btn.dataset.phone;
+            document.getElementById("editDept").value = btn.dataset.dept;
 
-        new bootstrap.Modal(document.getElementById("editEmployeeModal")).show();
+            new bootstrap.Modal(document.getElementById("editEmployeeModal")).show();
+        });
     });
-});
 
 
     document.querySelectorAll(".delete-btn").forEach(btn => {

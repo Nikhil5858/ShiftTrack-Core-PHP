@@ -1,5 +1,6 @@
-<?php include './includes/navbar.php'; ?>
-<?php include './includes/sidebar.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/ShiftTrack/config.php';?>
+<?php include ROOT_PATH . 'includes/navbar.php'; ?>
+<?php include ROOT_PATH . 'includes/sidebar.php'; ?>
 
 <div class="main-content">
     <div class="container-fluid">   

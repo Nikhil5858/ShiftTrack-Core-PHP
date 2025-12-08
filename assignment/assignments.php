@@ -1,5 +1,7 @@
-<?php include './includes/navbar.php'; ?>
-<?php include './includes/sidebar.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/ShiftTrack/config.php';?>
+<?php include ROOT_PATH . 'includes/navbar.php'; ?>
+<?php include ROOT_PATH . 'includes/sidebar.php'; ?>
+<?php include ROOT_PATH . 'database.php'; ?>
 
 <div class="main-content">
     <div class="container-fluid">
@@ -60,37 +62,21 @@
                 </thead>
 
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>John Smith</td>
-                    <td><span class="badge bg-success-subtle text-success">Morning</span></td>
-                    <td>2024-02-01</td>
-                    <td>Ongoing</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                    <td>
-                        <button class="btn btn-outline-danger btn-sm delete-btn"
-                                data-id="1"
-                                data-name="John Smith - Morning">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>2</td>
-                    <td>Sarah Johnson</td>
-                    <td><span class="badge bg-success-subtle text-success">Morning</span></td>
-                    <td>2024-02-01</td>
-                    <td>Ongoing</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                    <td>
-                        <button class="btn btn-outline-danger btn-sm delete-btn"
-                                data-id="2"
-                                data-name="Sarah Johnson - Morning">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>John Smith</td>
+                        <td><span class="badge bg-success-subtle text-success">Morning</span></td>
+                        <td>2024-02-01</td>
+                        <td>Ongoing</td>
+                        <td><span class="badge bg-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-outline-danger btn-sm delete-btn"
+                                    data-id="1"
+                                    data-name="John Smith - Morning">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -185,12 +171,12 @@
 
 
 <script>
-document.querySelectorAll(".delete-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-        document.getElementById("deleteAssignId").value = btn.dataset.id;
-        document.getElementById("deleteAssignName").innerText = btn.dataset.name;
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.getElementById("deleteAssignId").value = btn.dataset.id;
+            document.getElementById("deleteAssignName").innerText = btn.dataset.name;
 
-        new bootstrap.Modal(document.getElementById("deleteAssignmentModal")).show();
+            new bootstrap.Modal(document.getElementById("deleteAssignmentModal")).show();
+        });
     });
-});
 </script>

@@ -1,5 +1,8 @@
-<?php include './includes/navbar.php'; ?>
-<?php include './includes/sidebar.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/ShiftTrack/config.php';?>
+<?php include ROOT_PATH . 'includes/navbar.php'; ?>
+<?php include ROOT_PATH . 'includes/sidebar.php'; ?>
+<?php include ROOT_PATH . 'database.php'; ?>
+
 
 <div class="main-content">
     <div class="container-fluid">
@@ -38,43 +41,36 @@
                         <th>Department Name</th>
                         <th>Employees</th>
                         <th>Created At</th>
+                        <th>Updated At</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td><strong>Backend</strong></td>
-                        <td><span class="badge bg-light text-dark"><i class="bi bi-people"></i> 25 employees</span></td>
-                        <td>2024-01-15</td>
-                        <td>
-                            <button class="btn btn-outline-primary btn-sm edit-btn" data-id="1" data-name="Backend">
-                                <i class="bi bi-pencil"></i>
-                            </button>
 
-                            <button class="btn btn-outline-danger btn-sm delete-btn" data-id="1" data-name="Backend">
-                                <i class="bi bi-trash"></i>
-                            </button>
+                <?php
+                    $request = $connection->query("SELECT * FROM departments ORDER BY id ASC");
+                    foreach ($request as $row){
+                    ?>
+                        <tr>
+                            <td><?= $row['id'] ?></td>
+                            <td><strong><?= $row['name'] ?></strong></td>
+                            <td><span class="badge bg-light text-dark"><i class="bi bi-people"></i> 2 employees</span></td>
+                            <td><?= date("d-m-Y", strtotime($row['created_at'])) ?></td>
+                            <td><?= date("d-m-Y", strtotime($row['updated_at'])) ?></td>
+                            <td>
+                                <button class="btn btn-outline-primary btn-sm edit-btn" data-id="<?= $row['id'] ?>" data-name="<?= $row['name'] ?>">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
 
-                        </td>
-                    </tr>
+                                <button class="btn btn-outline-danger btn-sm delete-btn" data-id="<?= $row['id'] ?>" data-name="<?= $row['name'] ?>">
+                                    <i class="bi bi-trash"></i>
+                                </button>
 
-                    <tr>
-                        <td>2</td>
-                        <td><strong>Frontend</strong></td>
-                        <td><span class="badge bg-light text-dark"><i class="bi bi-people"></i> 8 employees</span></td>
-                        <td>2024-01-15</td>
-                        <td>
-                            <button class="btn btn-outline-primary btn-sm edit-btn" data-id="1" data-name="Frontend">
-                                <i class="bi bi-pencil"></i>
-                            </button>
+                            </td>
+                        </tr>
+                    <?php } ?>
 
-                            <button class="btn btn-outline-danger btn-sm delete-btn" data-id="1" data-name="Frontend">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
         </div>
@@ -98,8 +94,8 @@
                     </div>
 
                     <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Add Department</button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Department</button>
                     </div>
                 </form>
 
