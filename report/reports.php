@@ -51,8 +51,12 @@
                     <h5>Daily Attendance Report</h5>
                     <label class="mt-3">Select Date</label>
                     <div class="d-flex gap-3">
-                        <input type="date" class="form-control w-25">
-                        <button class="btn btn-primary"><i class="bi bi-bar-chart"></i> Generate Report</button>
+                        <form action="generate_daily_report.php" method="POST" class="d-flex gap-3">
+                            <input type="date" name="date" class="form-control w-auto" required>
+                            <button class="btn btn-primary">
+                                <i class="bi bi-download"></i> Download Excel
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -63,25 +67,38 @@
                     <h5>Monthly Summary</h5>
                     <p>Select month and generate attendance summary.</p>
 
-                    <div class="row mt-3">
-                        <div class="col-md-3">
-                            <label>Select Employee</label>
-                            <select class="form-select">
-                                <option>Abc</option>
-                                <option>Xyz</option>
-                                <option>dasbhj</option>
-                            </select>
+                    <form action="generate_monthly_report.php" method="POST">
+                        <div class="row mt-3">
+
+                            <div class="col-md-3">
+                                <label>Select Employee</label>
+                                <select name="employee_id" class="form-select" required>
+                                    <option value="">Select Employee</option>
+                                    <?php
+                                    $query = $connection->query("SELECT id, name FROM employees ORDER BY name");
+                                    foreach ($query as $e) { ?>
+                                        <option value="<?= $e['id'] ?>"><?= $e['name'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label>Select Month</label>
+                                <input type="month" name="month" class="form-control" required>
+                            </div>
+
+                            <div class="col-md-3 mt-4">
+                                <button class="btn btn-primary mt-1">
+                                    Generate Monthly Report
+                                </button>
+                            </div>
+
                         </div>
-                        <div class="col-md-3">
-                            <label>Select Month</label>
-                            <input type="month" class="form-control">
-                        </div>
-                        <div class="col-md-3 mt-4">
-                            <button class="btn btn-primary mt-1">Generate Monthly Report</button>
-                        </div>
-                    </div>
+                    </form>
+
                 </div>
             </div>
+
 
             <!-- Department Summary -->
             <div id="departmentReport" class="report-content">
@@ -89,26 +106,38 @@
                     <h5>Department Summary</h5>
                     <p>Select department and month to generate summary.</p>
 
-                    <div class="row mt-3">
-                        <div class="col-md-3">
-                            <label>Select Department</label>
-                            <select class="form-select">
-                                <option>Engineering</option>
-                                <option>Human Resources</option>
-                                <option>Marketing</option>
-                            </select>
+                    <form action="generate_department_report.php" method="POST">
+                        <div class="row mt-3">
+
+                            <div class="col-md-3">
+                                <label>Select Department</label>
+                                <select name="department_id" class="form-select" required>
+                                    <option value="">Select Department</option>
+                                    <?php 
+                                    $query = $connection->query("SELECT id, name FROM departments ORDER BY name");
+                                    foreach ($query as $d) { ?>
+                                        <option value="<?= $d['id'] ?>"><?= $d['name'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label>Select Month</label>
+                                <input type="month" name="month" class="form-control" required>
+                            </div>
+
+                            <div class="col-md-3 mt-4">
+                                <button class="btn btn-primary mt-1">
+                                    Generate Report
+                                </button>
+                            </div>
+
                         </div>
-                        <div class="col-md-3">
-                            <label>Select Month</label>
-                            <input type="month" class="form-control">
-                        </div>
-                        <div class="col-md-3 mt-4">
-                            <button class="btn btn-primary mt-1">Generate Report</button>
-                        </div>
-                    </div>
+                    </form>
 
                 </div>
             </div>
+
 
         </div>
 
