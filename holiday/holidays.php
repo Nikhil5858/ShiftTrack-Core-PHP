@@ -22,34 +22,40 @@
 
         <div class="row g-3 mt-3">
     
-            <!-- CARD 1 -->
+        <?php
+        $query = $connection->query("SELECT * FROM holidays ORDER BY date ASC");
+        foreach ($query as $h) {
+
+            $month = date("F", strtotime($h['date']));
+            $day   = date("l, F j, Y", strtotime($h['date']));
+        ?>
             <div class="col-md-4">
                 <div class="card">
                     <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center gap-2">
                             <i class="bi bi-calendar-week text-primary"></i>
-                            <strong>January</strong>
+                            <strong><?= $month ?></strong>
                         </div>
-                        <span class="badge bg-light text-dark">1</span>
+                        <span class="badge bg-light text-dark">Date : <?= date("j", strtotime($h['date'])) ?></span>
                     </div>
 
                     <div class="p-3 d-flex justify-content-between align-items-center">
                         <div>
-                            <strong>New Year's Day</strong><br>
-                            <small class="text-muted">Wednesday, January 1, 2025</small>
+                            <strong><?= $h['name'] ?></strong><br>
+                            <small class="text-muted"><?= $day ?></small>
                         </div>
 
                         <div class="d-flex gap-2">
                             <button class="btn btn-outline-primary btn-sm edit-btn"
-                                data-id="1"
-                                data-name="New Year's Day"
-                                data-date="2025-01-01">
+                                data-id="<?= $h['id'] ?>"
+                                data-name="<?= $h['name'] ?>"
+                                data-date="<?= $h['date'] ?>">
                                 <i class="bi bi-pencil"></i>
                             </button>
 
                             <button class="btn btn-outline-danger btn-sm delete-btn"
-                                data-id="1"
-                                data-name="New Year's Day">
+                                data-id="<?= $h['id'] ?>"
+                                data-name="<?= $h['name'] ?>">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </div>
@@ -57,6 +63,7 @@
                 </div>
             </div>
             
+        <?php } ?>
         </div>
 
 
@@ -179,4 +186,5 @@
             new bootstrap.Modal(document.getElementById("deleteHolidayModal")).show();
         });
     });
+
 </script>

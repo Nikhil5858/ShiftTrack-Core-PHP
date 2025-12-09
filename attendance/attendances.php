@@ -20,6 +20,34 @@
             </button>
         </div>
 
+        <?php
+            $today = date('Y-m-d');
+
+            $present = $connection->query("
+                SELECT COUNT(*) AS total 
+                FROM attendance 
+                WHERE date = '$today' AND status = 'Present'
+            ")->fetch()['total'];
+
+            $absent = $connection->query("
+                SELECT COUNT(*) AS total 
+                FROM attendance 
+                WHERE date = '$today' AND status = 'Absent'
+            ")->fetch()['total'];
+
+            $leave = $connection->query("
+                SELECT COUNT(*) AS total 
+                FROM attendance 
+                WHERE date = '$today' AND status = 'On Leave'
+            ")->fetch()['total'];
+
+            $halfday = $connection->query("
+                SELECT COUNT(*) AS total 
+                FROM attendance 
+                WHERE date = '$today' AND status = 'Half Day'
+            ")->fetch()['total'];
+        ?>
+
         <!-- STAT CARDS -->
         <div class="row g-3 ">
 
@@ -30,7 +58,7 @@
                         <div class="stat-icon bg-green-light">
                             <i class="bi bi-check2-circle text-success"></i>
                         </div>
-                        <h3>7</h3>
+                        <h3><?= $present ?></h3>
                         <p>Present</p>
                     </div>
                 </div>
@@ -43,7 +71,7 @@
                         <div class="stat-icon bg-danger-light">
                             <i class="bi bi-x-circle text-danger"></i>
                         </div>
-                        <h3>1</h3>
+                        <h3><?= $absent ?></h3>
                         <p>Absent</p>
                     </div>
                 </div>
@@ -56,7 +84,7 @@
                         <div class="stat-icon bg-info-light">
                             <i class="bi bi-calendar-event text-info"></i>
                         </div>
-                        <h3>1</h3>
+                        <h3><?= $leave ?></h3>
                         <p>On Leave</p>
                     </div>
                 </div>
@@ -69,7 +97,7 @@
                         <div class="stat-icon bg-warning-light">
                             <i class="bi bi-clock text-warning"></i>
                         </div>
-                        <h3>1</h3>
+                        <h3><?= $halfday ?></h3>
                         <p>Half Day</p>
                     </div>
                 </div>
@@ -116,28 +144,37 @@
                 </thead>
                 <tbody>
 
-                    <tr>
-                        <td>1</td>
-                        <td><strong>John Smith</strong><br><small class="text-muted">john@company.com</small></td>
-                        <td>Engineering</td>
-                        <td>08:55</td>
-                        <td>17:30</td>
-                        <td><span class="badge bg-success-subtle text-success">Present</span></td>
-                        <td>0</td>
-                        <td>30</td>
+                    <?php
+                        $query = $connection->query("
+                            SELECT a.*, e.name AS employee_name, e.email AS emp_email, d.name AS dept_name
+                            FROM attendance a
+                            JOIN employees e ON a.employee_id = e.id
+                            JOIN departments d ON e.department_id = d.id
+                            WHERE a.date = CURDATE()
+                            ORDER BY a.date DESC
+                        ");
+                        foreach($query as $a){
+                    ?>
+                        <tr>
+                        <td><?= $a['id'] ?></td>
+                        <td><strong><?= $a['employee_name'] ?></strong><br><small class="text-muted"><?= $a['emp_email'] ?></small></td>
+                        <td><?= $a['dept_name'] ?></td>
+                        <td><?= $a['check_in'] ?></td>
+                        <td><?= $a['check_out'] ?></td>
+                        <td><span class="badge bg-success-subtle text-success"><?= $a['status'] ?></span></td>
+                        <td><?= $a['late_minutes'] ?></td>
+                        <td><?= $a['overtime_minutes'] ?></td>
                         <td>
                             <button class="btn btn-outline-primary btn-sm edit-btn"
-                                data-id="1"
-                                data-emp="John Smith"
-                                data-date="2025-12-08"
-                                data-in="08:55"
-                                data-out="17:30"
-                                data-status="Present">
+                                data-id="<?= $a['id'] ?>"
+                                data-checkin="<?= $a['check_in'] ?>"
+                                data-checkout="<?= $a['check_out'] ?>"
+                                data-status="<?= $a['status'] ?>">
                                 <i class="bi bi-pencil"></i>
                             </button>
                         </td>
-                    </tr>
-
+                        </tr>
+                    <?php } ?>
                 </tbody>
             </table>
         </div>
@@ -160,9 +197,13 @@
 
                     <label class="form-label">Employee *</label>
                     <select name="employee" class="form-select mb-3" required>
-                        <option>Select employee</option>
-                        <option value="1">John Smith</option>
+                        <option value="">Select employee</option>
+                        <?php
+                            $query = $connection->query("SELECT id,name FROM employees ORDER BY name");
+                            foreach ($query as $e) echo "<option value='{$e['id']}'>{$e['name']}</option>";
+                        ?>
                     </select>
+
 
                     <label class="form-label">Date *</label>
                     <input type="date" name="date" class="form-control mb-3" required>
@@ -248,8 +289,8 @@
         btn.addEventListener("click", () => {
 
             document.getElementById("editId").value = btn.dataset.id;
-            document.getElementById("editIn").value = btn.dataset.in;
-            document.getElementById("editOut").value = btn.dataset.out;
+            document.getElementById("editIn").value = btn.dataset.checkin || "";
+            document.getElementById("editOut").value = btn.dataset.checkout || "";
             document.getElementById("editStatus").value = btn.dataset.status;
 
             new bootstrap.Modal(document.getElementById("editAttendanceModal")).show();
