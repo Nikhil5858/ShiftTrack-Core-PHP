@@ -8,7 +8,7 @@
     <div class="container-fluid">
 
         <!-- Header -->
-        <div class="d-flex justify-content-between align-items-start mt-3">
+        <div class="d-flex justify-content-between align-items-start mt-1">
             <div>
                 <h3>Shifts</h3>
                 <p class="text-muted">Configure work shifts and schedules</p>

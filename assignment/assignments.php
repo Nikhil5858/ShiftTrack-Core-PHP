@@ -7,7 +7,7 @@
     <div class="container-fluid">
 
         <!-- Header Row -->
-        <div class="d-flex justify-content-between align-items-start mt-3">
+        <div class="d-flex justify-content-between align-items-start mt-1">
             <div>
                 <h3>Shift Assignments</h3>
                 <p class="text-muted">Assign shifts to employees with date ranges</p>
@@ -25,21 +25,12 @@
 
                 <!-- Employee Filter -->
                 <div class="col-md-3">
-                    <select class="form-select">
-                        <option selected>All Employees</option>
-                        <option>John Smith</option>
-                        <option>Sarah Johnson</option>
-                        <option>Michael Brown</option>
-                    </select>
-                </div>
-
-                <!-- Shift Filter -->
-                <div class="col-md-3">
-                    <select class="form-select">
-                        <option selected>All Shifts</option>
-                        <option>Morning</option>
-                        <option>Evening</option>
-                        <option>Night</option>
+                    <select name="shifts" id="shiftFilter" class="form-select mb-1" required>
+                        <option value="all" selected>Select Shifts</option>
+                        <?php 
+                            $query = $connection->query("SELECT id, name FROM shifts ORDER BY name");
+                            foreach ($query as $emp) echo "<option value='{$emp['name']}'>{$emp['name']}</option>";
+                        ?>
                     </select>
                 </div>
 
@@ -61,7 +52,7 @@
                 </tr>
                 </thead>
 
-                <tbody>
+                <tbody id="assignmentTable">
 
                 <?php
                     $query = $connection->query("
@@ -251,8 +242,6 @@
 
     </div>
 </div>
-
-
 <script>
     document.querySelectorAll(".edit-btn").forEach(btn => {
         btn.onclick = () => {
@@ -273,4 +262,24 @@
             new bootstrap.Modal(document.getElementById("deleteAssignmentModal")).show();
         });
     });
+
+    const shiftFilter = document.getElementById("shiftFilter");
+    const assignRows = document.querySelectorAll("#assignmentTable tr");
+
+    function filterAssignments() {
+        const selectedShift = shiftFilter.value.toLowerCase();
+
+        assignRows.forEach(row => {
+            const shiftName = row.querySelector("td:nth-child(3)").innerText.toLowerCase();
+
+            const match =
+                selectedShift === "all" ||
+                shiftName.includes(selectedShift);
+
+            row.style.display = match ? "" : "none";
+        });
+    }
+
+    shiftFilter.addEventListener("change", filterAssignments);
+
 </script>

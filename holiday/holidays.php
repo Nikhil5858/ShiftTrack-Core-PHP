@@ -8,7 +8,7 @@
     <div class="container-fluid">
 
         <!-- Header Row -->
-        <div class="d-flex justify-content-between align-items-start mt-3">
+        <div class="d-flex justify-content-between align-items-start mt-1">
             <div>
                 <h3>Holidays</h3>
                 <p class="text-muted">Manage company holidays and non-working days</p>

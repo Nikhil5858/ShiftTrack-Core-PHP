@@ -16,13 +16,7 @@
         <i class="bi bi-list" style="font-size: 1.6rem;"></i>
     </button>
 
-    <form class="search-box-wrapper d-flex me-auto mt-1">
-        <div class="search-input-container">
-            <i class="bi bi-search search-icon"></i>
-            <input class="form-control search-input" type="search" placeholder="Search If you want...">
-        </div>
-    </form>
-
+    <h3>ShiftTrack - HR Management</h3>
 
     <ul class="navbar-nav ms-auto">
         <li class="nav-item ms-3">

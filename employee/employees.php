@@ -8,7 +8,7 @@
     <div class="container-fluid">
 
         <!-- Header Row -->
-        <div class="d-flex justify-content-between align-items-start mt-3">
+        <div class="d-flex justify-content-between align-items-start mt-1">
             <div>
                 <h3>Employees</h3>
                 <p class="text-muted">Manage employee records and profiles</p>
@@ -27,21 +27,9 @@
                 <div class="col-md-6">
                     <div class="search-input-container w-100">
                         <i class="bi bi-search search-icon"></i>
-                        <input type="text" class="form-control search-input" placeholder="Search by name, email, or phone...">
+                        <input type="text" id="employeeSearch" class="form-control search-input" placeholder="Search by name, email, or phone...">
                     </div>
                 </div>
-
-                <!-- Department Filter -->
-                <div class="col-md-4">
-                    <select class="form-select">
-                        <option selected>All Departments</option>
-                        <option>Engineering</option>
-                        <option>Human Resources</option>
-                        <option>Marketing</option>
-                        <option>Operations</option>
-                    </select>
-                </div>
-
             </div>
         </div>
 
@@ -58,7 +46,7 @@
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody id="employeeTable">
                     <?php
                             $query = $connection->query(
                                 "SELECT e.*, d.name AS department_name 
@@ -250,5 +238,28 @@
             new bootstrap.Modal(document.getElementById("deleteEmployeeModal")).show();
         });
     });
+
+    const searchInput = document.getElementById("employeeSearch");
+    const rows = document.querySelectorAll("#employeeTable tr");
+
+    function filterEmployees() {
+        const searchText = searchInput.value.toLowerCase().trim();
+
+        rows.forEach(row => {
+            const name = row.querySelector("td:nth-child(2) strong").innerText.toLowerCase();
+            const email = row.querySelector("td:nth-child(2) small").innerText.toLowerCase();
+            const phone = row.querySelector("td:nth-child(4)").innerText.toLowerCase();
+
+            const matchesSearch =
+                name.includes(searchText) ||
+                email.includes(searchText) ||
+                phone.includes(searchText);
+
+            row.style.display = matchesSearch ? "" : "none";
+        });
+    }
+
+    searchInput.addEventListener("keyup", filterEmployees);
+
 </script>
 

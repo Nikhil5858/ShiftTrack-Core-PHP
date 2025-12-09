@@ -7,7 +7,7 @@
 <div class="main-content">
     <div class="container-fluid">
 
-        <h3 class="mt-3">Reports</h3>
+        <h3 class="mt-1">Reports</h3>
         <p class="text-muted">Generate attendance reports and summaries</p>
 
         <!-- CARD TABS -->

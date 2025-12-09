@@ -8,7 +8,7 @@
     <div class="container-fluid">
 
         <!-- Header Row -->
-        <div class="d-flex justify-content-between align-items-start mt-3">
+        <div class="d-flex justify-content-between align-items-start mt-1">
             <div>
                 <h3>Departments</h3>
                 <p class="text-muted">Manage company departments and divisions</p>
@@ -26,7 +26,7 @@
                 <!-- Search Input -->
                 <div class="search-input-container">
                     <i class="bi bi-search search-icon"></i>
-                    <input type="text" class="form-control search-input" placeholder="Search departments...">
+                    <input type="text" id="deptSearch" class="form-control search-input" placeholder="Search departments...">
                 </div>
 
             </div>
@@ -46,7 +46,7 @@
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody id="deptTable">
 
                 <?php
                     $request = $connection->query("SELECT * FROM departments ORDER BY id ASC");
@@ -162,6 +162,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -189,4 +190,22 @@
             new bootstrap.Modal(document.getElementById("deleteDeptModal")).show();
         });
     });
+    
+    const searchInput = document.getElementById("deptSearch");
+    const tableRows = document.querySelectorAll("#deptTable tr");
+
+    searchInput.addEventListener("keyup", function () {
+        const keyword = this.value.toLowerCase().trim();
+
+        tableRows.forEach(row => {
+            const deptName = row.querySelector("td:nth-child(2)").innerText.toLowerCase();
+            
+            if (deptName.includes(keyword)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
+
 </script>

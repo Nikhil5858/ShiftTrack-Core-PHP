@@ -8,7 +8,7 @@
     <div class="container-fluid">  
         
         <!-- Header Row -->
-        <div class="d-flex justify-content-between align-items-start mt-3">
+        <div class="d-flex justify-content-between align-items-start mt-1">
             <div>
                 <h3>Attendance</h3>
                 <p class="text-muted">Record and manage daily attendance</p>
@@ -48,7 +48,7 @@
             ")->fetch()['total'];
         ?>
 
-        <!-- STAT CARDS -->
+        <!-- CARDS -->
         <div class="row g-3 ">
 
             <!-- Present -->
@@ -106,28 +106,20 @@
 
         <!-- Filters -->
         <div class="card p-3 mt-3">
-            <div class="row g-2">
-
-                <!-- Employee Filter -->
-                <div class="col-md-3">
-                    <input type="date" name="date" class="form-control">
+            <form method="GET">
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <input type="date" name="date" class="form-control"
+                            value="<?= $_GET['date'] ?? date('Y-m-d') ?>"
+                            onchange="this.form.submit()">
+                    </div>
                 </div>
-
-                <!-- Shift Filter -->
-                <div class="col-md-3">
-                    <select class="form-select">
-                        <option selected>All Shifts</option>
-                        <option>Morning</option>
-                        <option>Evening</option>
-                        <option>Night</option>
-                    </select>
-                </div>
-
-            </div>
+            </form>
         </div>
 
+
         <!-- Attendance Table -->
-        <div class="card mt-4">
+        <div class="card mt-3">
             <table class="table align-middle">
                 <thead class="table-light">
                     <tr>
@@ -145,14 +137,18 @@
                 <tbody>
 
                     <?php
-                        $query = $connection->query("
+                        $selectedDate = $_GET['date'] ?? date('Y-m-d');
+                        $query = $connection->prepare("
                             SELECT a.*, e.name AS employee_name, e.email AS emp_email, d.name AS dept_name
                             FROM attendance a
                             JOIN employees e ON a.employee_id = e.id
                             JOIN departments d ON e.department_id = d.id
-                            WHERE a.date = CURDATE()
-                            ORDER BY a.date DESC
+                            WHERE a.date = :date
+                            ORDER BY a.id DESC
                         ");
+
+                        $query->execute(['date' => $selectedDate]);
+
                         foreach($query as $a){
                     ?>
                         <tr>
