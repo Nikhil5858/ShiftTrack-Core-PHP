@@ -62,21 +62,47 @@
                 </thead>
 
                 <tbody>
+
+                <?php
+                    $query = $connection->query("
+                        SELECT es.*, e.name AS employee_name,s.name AS shift_name
+                        FROM employee_shifts es
+                        JOIN employees e ON es.employee_id = e.id
+                        JOIN shifts s ON es.shift_id = s.id
+                        ORDER BY es.id DESC
+                    ");
+
+                    foreach ($query as $es){
+                    ?>
                     <tr>
-                        <td>1</td>
-                        <td>John Smith</td>
-                        <td><span class="badge bg-success-subtle text-success">Morning</span></td>
-                        <td>2024-02-01</td>
-                        <td>Ongoing</td>
+                        <td><?= $es['id'] ?></td>
+                        <td><?= $es['employee_name'] ?></td>
+                        <td><span class="badge bg-success-subtle text-success"><?= $es['shift_name'] ?></span></td>
+                        <td><?= date("d-m-Y", strtotime($es['effective_from'])) ?></td>
+                        <td><?= date("d-m-Y", strtotime($es['effective_to'])) ?></td>
                         <td><span class="badge bg-success">Active</span></td>
                         <td>
-                            <button class="btn btn-outline-danger btn-sm delete-btn"
-                                    data-id="1"
-                                    data-name="John Smith - Morning">
-                                <i class="bi bi-trash"></i>
-                            </button>
+                        <button class="btn btn-outline-primary btn-sm edit-btn"
+                            data-id="<?= $es['id'] ?>"
+                            data-employee="<?= $es['employee_id'] ?>"
+                            data-shift="<?= $es['shift_id'] ?>"
+                            data-from="<?= $es['effective_from'] ?>"
+                            data-to="<?= $es['effective_to'] ?>">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+
+
+                        <button class="btn btn-outline-danger btn-sm delete-btn"
+                                data-id="<?= $es['id'] ?>"
+                                data-name="<?= $es['employee_name'] . ' - ' . $es['shift_name'] ?>">
+                            <i class="bi bi-trash"></i>
+                        </button>
+
                         </td>
                     </tr>
+
+                <?php } ?>
+
                 </tbody>
             </table>
         </div>
@@ -92,34 +118,36 @@
                         <button class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
-                    <form action="add_assignment.php" method="POST">
+                    <form action="add_assignments.php" method="POST">
                         <div class="modal-body">
 
                             <label class="form-label">Employee *</label>
                             <select name="employee" class="form-select mb-3" required>
                                 <option value="">Select employee</option>
-                                <option>John Smith</option>
-                                <option>Sarah Johnson</option>
-                                <option>Michael Brown</option>
+                                <?php 
+                                    $query = $connection->query("SELECT id, name FROM employees ORDER BY name");
+                                    foreach ($query as $emp) echo "<option value='{$emp['id']}'>{$emp['name']}</option>";
+                                ?>
                             </select>
 
                             <label class="form-label">Shift *</label>
                             <select name="shift" class="form-select mb-3" required>
                                 <option value="">Select shift</option>
-                                <option>Morning</option>
-                                <option>Evening</option>
-                                <option>Night</option>
+                                <?php 
+                                    $query = $connection->query("SELECT id, name FROM shifts ORDER BY name");
+                                    foreach ($query as $shift) echo "<option value='{$shift['id']}'>{$shift['name']}</option>";
+                                ?>
                             </select>
 
                             <div class="row">
                                 <div class="col-md-6">
                                     <label class="form-label">Effective From *</label>
-                                    <input type="date" name="start_date" class="form-control mb-3" required>
+                                    <input type="date" name="effective_from" class="form-control mb-3" required>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label">Effective To</label>
-                                    <input type="date" name="end_date" class="form-control mb-3">
+                                    <input type="date" name="effective_to" class="form-control mb-3">
                                 </div>
                             </div>
 
@@ -135,6 +163,61 @@
             </div>
         </div>
 
+        <!-- EDIT MODAL -->
+        <div class="modal fade" id="editAssignmentModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Assignment</h5>
+                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <form action="edit_assignment.php" method="POST">
+
+                    <div class="modal-body">
+
+                        <input type="hidden" name="id" id="editId">
+
+                        <label class="form-label">Employee *</label>
+                        <select name="employee" id="editEmployee" class="form-select mb-3" required>
+                            <?php 
+                            $query = $connection->query("SELECT id, name FROM employees ORDER BY name");
+                            foreach ($query as $emp) echo "<option value='{$emp['id']}'>{$emp['name']}</option>";
+                            ?>
+                        </select>
+
+                        <label class="form-label">Shift *</label>
+                        <select name="shift" id="editShift" class="form-select mb-3" required>
+                            <?php 
+                            $query = $connection->query("SELECT id, name FROM shifts ORDER BY name");
+                            foreach ($query as $sh) echo "<option value='{$sh['id']}'>{$sh['name']}</option>";
+                            ?>
+                        </select>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Effective From *</label>
+                                <input type="date" name="effective_from" id="editFrom" class="form-control mb-3">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Effective To</label>
+                                <input type="date" name="effective_to" id="editTo" class="form-control mb-3">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
 
         <!-- Delete Assignment Modal -->
         <div class="modal fade" id="deleteAssignmentModal" tabindex="-1">
@@ -146,10 +229,10 @@
                         <button class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
-                    <form action="delete_assignment.php" method="POST">
+                    <form action="delete_assignments.php" method="POST">
                         <div class="modal-body">
 
-                            <input type="hidden" name="assignment_id" id="deleteAssignId">
+                            <input type="hidden" name="id" id="deleteAssignId">
 
                             <p>Are you sure you want to delete this assignment?</p>
                             <p class="fw-bold text-danger" id="deleteAssignName"></p>
@@ -171,6 +254,17 @@
 
 
 <script>
+    document.querySelectorAll(".edit-btn").forEach(btn => {
+        btn.onclick = () => {
+            document.getElementById("editId").value = btn.dataset.id;
+            document.getElementById("editEmployee").value = btn.dataset.employee;
+            document.getElementById("editShift").value = btn.dataset.shift;
+            document.getElementById("editFrom").value = btn.dataset.from;
+            document.getElementById("editTo").value = btn.dataset.to;
+
+            new bootstrap.Modal(document.getElementById("editAssignmentModal")).show();
+        };
+    });
     document.querySelectorAll(".delete-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             document.getElementById("deleteAssignId").value = btn.dataset.id;

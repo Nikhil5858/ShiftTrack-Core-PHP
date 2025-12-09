@@ -78,11 +78,12 @@ CREATE TABLE attendance_logs (
 );
 
 INSERT INTO departments (name) VALUES
-('Human Resources'),
-('Engineering'),
+('Backend'),
+('Frontend'),
 ('Marketing'),
 ('Finance'),
-('Operations');
+('SEO'),
+('QA');
 
 INSERT INTO shifts (name, start_time, end_time, grace_minutes) VALUES
 ('Morning', '09:00:00', '17:00:00', 10),
@@ -90,16 +91,16 @@ INSERT INTO shifts (name, start_time, end_time, grace_minutes) VALUES
 ('Night', '22:00:00', '06:00:00', 0);
 
 INSERT INTO employees (name, email, phone, department_id) VALUES
-('John Doe', 'john@example.com', '9991112222', 1),
-('Aarav Patel', 'aarav@example.com', '8882223333', 2),
-('Priya Shah', 'priya@example.com', '7773334444', 3),
-('Riya Mehta', 'riya@example.com', '6664445555', 2),
-('Karan Desai', 'karan@example.com', '9995557777', 4),
-('Nisha Singh', 'nisha@example.com', '8886661111', 1),
-('Raj Malhotra', 'raj@example.com', '9007708800', 5),
-('Mohan Kumar', 'mohan@example.com', '9090909090', 2),
-('Sonal Jain', 'sonal@example.com', '7775556666', 3),
-('Ankit Verma', 'ankit@example.com', '7008009001', 5);
+('Nikhil Rathod', 'nikhilrathod@example.com', '9991112222', 1),
+('Archana kanzariya', 'archana@example.com', '8882223333', 2),
+('Meghavi Joshi', 'meghavi@example.com', '7773334444', 3),
+('Harsh Bhatt', 'harsh@example.com', '6664445555', 2),
+('Ronak Thummar', 'ronak@example.com', '9995557777', 4),
+('Uday Gajjar', 'uday@example.com', '8886661111', 1),
+('Amita Naliyapara', 'amita@example.com', '9007708800', 5),
+('Jay Gohel', 'jay@example.com', '9090909090', 2),
+('Yash Mehta', 'yash@example.com', '7775556666', 3),
+('Harsh Mehta', 'harsmehta@example.com', '7008009001', 5);
 
 INSERT INTO employee_shifts (employee_id, shift_id, effective_from) VALUES
 (1, 1, '2025-01-01'),
@@ -109,8 +110,11 @@ INSERT INTO employee_shifts (employee_id, shift_id, effective_from) VALUES
 (5, 1, '2025-01-01');
 
 INSERT INTO holidays (date, name) VALUES
-('2025-01-26', 'Republic Day'),
-('2025-03-08', 'Women Day');
+('2026-01-01', 'Happy New Year'),
+('2026-01-14', 'Makar Sankranti'),
+('2026-01-19', 'Makar Sankranti'),
+('2026-01-26', 'Republic Day'),
+('2026-03-08', 'Women Day');
 
 INSERT INTO attendance (employee_id, date, check_in, check_out, status, late_minutes, overtime_minutes)
 VALUES

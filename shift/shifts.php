@@ -21,57 +21,71 @@
         </div>
 
         <div class="row mt-2 g-3">
+            <?php
+            $shift = $connection->query("SELECT * FROM shifts ORDER BY id ASC");
 
-            <div class="col-md-4">
-                <div class="shift-card p-3">
+            foreach ($shift as $s) {
+            ?>
+                <div class="col-md-4">
+                    <div class="shift-card p-3">
 
-                    <div class="d-flex justify-content-between">
-                        <h5 class="shift-title">Morning</h5>
+                        <div class="d-flex justify-content-between">
+                            <h5 class="shift-title"><?= $s['name'] ?></h5>
 
-                        <button class="btn btn-sm btn-light menu-btn" data-bs-toggle="dropdown">
-                            <i class="bi bi-three-dots-vertical"></i>
-                        </button>
+                            <button class="btn btn-sm btn-light menu-btn" data-bs-toggle="dropdown">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
 
-                        <ul class="dropdown-menu">
-                            <li><button class="dropdown-item edit-btn">Edit</button></li>
-                            <li><button class="dropdown-item text-danger delete-btn">Delete</button></li>
-                        </ul>
-                    </div>
+                            <ul class="dropdown-menu">
+                                <li><button class="dropdown-item edit-btn"
+                                    data-id="<?= $s['id'] ?>"
+                                    data-name="<?= $s['name'] ?>"
+                                    data-start="<?= $s['start_time'] ?>"
+                                    data-end="<?= $s['end_time'] ?>"
+                                    data-grace="<?= $s['grace_minutes'] ?>">
+                                    Edit</button></li>
+                                <li><button class="dropdown-item text-danger delete-btn"
+                                    data-id="<?= $s['id'] ?>"
+                                    data-name="<?= $s['name'] ?>"
+                            >Delete</button></li>
+                            </ul>
+                        </div>
 
-                    <div class="shift-body d-flex justify-content-between align-items-center mt-3">
-                        
-                        <!-- Start -->
-                        <div class="text-center ms-3">
-                            <div class="shift-icon start-icon">
-                                <i class="bi bi-caret-up-fill"></i>
+                        <div class="shift-body d-flex justify-content-between align-items-center mt-3">
+                            
+                            <!-- Start -->
+                            <div class="text-center ms-3">
+                                <div class="shift-icon start-icon">
+                                    <i class="bi bi-caret-up-fill"></i>
+                                </div>
+                                <div class="shift-time"><?= date("g:i A", strtotime($s['start_time'])) ?></div>
+                                <small class="text-muted">Start</small>
                             </div>
-                            <div class="shift-time">9:00 AM</div>
-                            <small class="text-muted">Start</small>
-                        </div>
 
-                        <!-- Arrow -->
-                        <div class="arrow-icon">
-                            <i class="bi bi-arrow-right"></i>
-                        </div>
-
-                        <!-- End -->
-                        <div class="text-center me-3">
-                            <div class="shift-icon end-icon">
-                                <i class="bi bi-caret-down-fill"></i>
+                            <!-- Arrow -->
+                            <div class="arrow-icon">
+                                <i class="bi bi-arrow-right"></i>
                             </div>
-                            <div class="shift-time">5:00 PM</div>
-                            <small class="text-muted">End</small>
+
+                            <!-- End -->
+                            <div class="text-center me-3">
+                                <div class="shift-icon end-icon">
+                                    <i class="bi bi-caret-down-fill"></i>
+                                </div>
+                                <div class="shift-time"><?= date("g:i A", strtotime($s['end_time'])) ?></div>
+                                <small class="text-muted">End</small>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="grace-box mt-3 d-flex justify-content-between align-items-center">
-                        <span>Grace Period</span>
-                        <strong>15 minutes</strong>
-                    </div>
+                        <div class="grace-box mt-3 d-flex justify-content-between align-items-center">
+                            <span>Grace Period</span>
+                            <strong><?= $s['grace_minutes'] ?> Minutes</strong>
+                        </div>
 
+                    </div>
                 </div>
-            </div>
 
+            <?php } ?>
         </div>
 
     </div>
