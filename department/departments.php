@@ -7,7 +7,6 @@
 <div class="main-content">
     <div class="container-fluid">
 
-        <!-- Header Row -->
         <div class="d-flex justify-content-between align-items-start mt-1">
             <div>
                 <h3>Departments</h3>
@@ -51,11 +50,12 @@
                 <?php
                     $request = $connection->query("SELECT * FROM departments ORDER BY id ASC");
                     foreach ($request as $row){
-                    ?>
+                        ?>
                         <tr>
                             <td><?= $row['id'] ?></td>
                             <td><strong><?= $row['name'] ?></strong></td>
-                            <td><span class="badge bg-light text-dark"><i class="bi bi-people"></i> 2 employees</span></td>
+                            <?php $empCount = $connection->query("SELECT COUNT(*) AS total FROM employees WHERE department_id = {$row['id']}")->fetch()['total'];?>
+                            <td><span class="badge bg-light text-dark"><i class="bi bi-people"></i> <?= $empCount ?> Employees</span></td>
                             <td><?= date("d-m-Y", strtotime($row['created_at'])) ?></td>
                             <td><?= date("d-m-Y", strtotime($row['updated_at'])) ?></td>
                             <td>
@@ -69,8 +69,8 @@
 
                             </td>
                         </tr>
-                    <?php } ?>
-
+                        
+                        <?php } ?>
                 </tbody>
             </table>
         </div>
@@ -88,8 +88,12 @@
                 <form method="POST" action="add_department.php">
                     <div class="modal-body">
 
-                        <label class="form-label">Department Name</label>
-                        <input type="text" name="department_name" class="form-control" placeholder="Enter Department Name">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label class="form-label">Department Name</label>
+                            <span class="error-message text-danger small d-none"></span>
+                        </div>
+
+                        <input type="text" name="department_name" class="form-control mb-3" data-required="true" data-error="Department name is required">
 
                     </div>
 
@@ -118,8 +122,12 @@
 
                         <input type="hidden" name="dept_id" id="editDeptId">
 
-                        <label class="form-label">Department Name</label>
-                        <input type="text" name="department_name" id="editDeptName" class="form-control" required>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label class="form-label">Department Name</label>
+                            <span class="error-message text-danger small d-none"></span>
+                        </div>
+
+                        <input type="text" name="department_name" id="editDeptName" class="form-control mb-3" data-required="true" data-error="Department name is required">
 
                     </div>
 
@@ -167,6 +175,7 @@
 </div>
 
 <script>
+
     document.querySelectorAll(".edit-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const id = btn.dataset.id;

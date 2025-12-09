@@ -80,11 +80,19 @@
             <form action="add_holiday.php" method="POST">
                 <div class="modal-body">
 
-                    <label class="form-label">Holiday Name *</label>
-                    <input type="text" name="holiday_name" class="form-control mb-3" required>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label">Holiday Name *</label>
+                        <span class="error-message text-danger small d-none"></span>
+                    </div>
+                    <input type="text" name="holiday_name" class="form-control mb-3"
+                        data-required="true" data-error="Holiday Name is required">
 
-                    <label class="form-label">Holiday Date *</label>
-                    <input type="date" name="holiday_date" class="form-control mb-3" required>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label">Holiday Date *</label>
+                        <span class="error-message text-danger small d-none"></span>
+                    </div>
+                    <input type="date" name="holiday_date" class="form-control mb-3"
+                        data-required="true" data-error="Holiday Date is required">
 
                 </div>
 
@@ -115,11 +123,17 @@
 
                     <input type="hidden" name="edit_id" id="editHolidayId">
 
-                    <label class="form-label">Holiday Name *</label>
-                    <input type="text" name="holiday_name" id="editHolidayName" class="form-control mb-3" required>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label">Holiday Name *</label>
+                        <span class="error-message text-danger small d-none"></span>
+                    </div>
+                    <input type="text" name="holiday_name" id="editHolidayName" class="form-control mb-3" data-required="true" data-error="Holiday Name is required">
 
-                    <label class="form-label">Holiday Date *</label>
-                    <input type="date" name="holiday_date" id="editHolidayDate" class="form-control mb-3" required>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label">Holiday Date *</label>
+                        <span class="error-message text-danger small d-none"></span>
+                    </div>
+                    <input type="date" name="holiday_date" id="editHolidayDate" class="form-control mb-3" data-required="true" data-error="Holiday Date is required">
 
                 </div>
 

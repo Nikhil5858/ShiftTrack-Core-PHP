@@ -51,9 +51,14 @@
                     <h5>Daily Attendance Report</h5>
                     <label class="mt-3">Select Date</label>
                     <div class="d-flex gap-3">
-                        <form action="generate_daily_report.php" method="POST" class="d-flex gap-3">
-                            <input type="date" name="date" class="form-control w-auto" required>
-                            <button class="btn btn-primary">
+                        <form action="generate_daily_report.php" method="POST" class="d-flex align-items-start gap-3">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="error-message text-danger small d-none"></span>
+                                </div>
+                                <input type="date" name="date" class="form-control w-auto" data-required="true" data-error="Please select a date">
+                            </div>
+                            <button class="btn btn-primary mt-auto">
                                 <i class="bi bi-download"></i> Download Excel
                             </button>
                         </form>
@@ -71,8 +76,12 @@
                         <div class="row mt-3">
 
                             <div class="col-md-3">
-                                <label>Select Employee</label>
-                                <select name="employee_id" class="form-select" required>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="form-label ms-1">Select Employee *</label>
+                                    <span class="error-message text-danger small d-none"></span>
+                                </div>
+                                <select name="employee_id" class="form-select mb-3"
+                                        data-required="true" data-error="Please select an employee">
                                     <option value="">Select Employee</option>
                                     <?php
                                     $query = $connection->query("SELECT id, name FROM employees ORDER BY name");
@@ -83,8 +92,11 @@
                             </div>
 
                             <div class="col-md-3">
-                                <label>Select Month</label>
-                                <input type="month" name="month" class="form-control" required>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="form-label">Select Month *</label>
+                                    <span class="error-message text-danger small d-none"></span>
+                                </div>
+                                <input type="month" name="month" class="form-control mb-3" data-required="true" data-error="Please select a month">
                             </div>
 
                             <div class="col-md-3 mt-4">
@@ -110,8 +122,11 @@
                         <div class="row mt-3">
 
                             <div class="col-md-3">
-                                <label>Select Department</label>
-                                <select name="department_id" class="form-select" required>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="form-label ms-1">Select Department *</label>
+                                    <span class="error-message text-danger small d-none"></span>
+                                </div>
+                                <select name="department_id" class="form-select mb-3" data-required="true" data-error="Please select a department">
                                     <option value="">Select Department</option>
                                     <?php 
                                     $query = $connection->query("SELECT id, name FROM departments ORDER BY name");
@@ -122,8 +137,11 @@
                             </div>
 
                             <div class="col-md-3">
-                                <label>Select Month</label>
-                                <input type="month" name="month" class="form-control" required>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="form-label">Select Month *</label>
+                                    <span class="error-message text-danger small d-none"></span>
+                                </div>
+                                <input type="month" name="month" class="form-control mb-3" data-required="true" data-error="Please select a month">
                             </div>
 
                             <div class="col-md-3 mt-4">
@@ -134,6 +152,7 @@
 
                         </div>
                     </form>
+
 
                 </div>
             </div>

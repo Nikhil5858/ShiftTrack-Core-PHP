@@ -61,7 +61,7 @@ require ROOT_PATH . 'database.php';
                         <div class="stat-icon bg-danger-light">
                             <i class="bi bi-x-circle text-danger"></i>
                         </div>
-                        <h3><?= $absentToday ?></h3>
+                        <h3><?= $absentToday = $totalEmployees - $presentToday?></h3>
                         <p>Absent Today</p>
                     </div>
                 </div>

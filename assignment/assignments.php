@@ -112,8 +112,12 @@
                     <form action="add_assignments.php" method="POST">
                         <div class="modal-body">
 
-                            <label class="form-label">Employee *</label>
-                            <select name="employee" class="form-select mb-3" required>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Employee *</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <select name="employee" class="form-select mb-3"
+                                    data-required="true" data-error="Please select an employee">
                                 <option value="">Select employee</option>
                                 <?php 
                                     $query = $connection->query("SELECT id, name FROM employees ORDER BY name");
@@ -121,8 +125,13 @@
                                 ?>
                             </select>
 
-                            <label class="form-label">Shift *</label>
-                            <select name="shift" class="form-select mb-3" required>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Shift *</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <select name="shift" class="form-select mb-3"
+                                    data-required="true" data-error="Please select a shift">
                                 <option value="">Select shift</option>
                                 <?php 
                                     $query = $connection->query("SELECT id, name FROM shifts ORDER BY name");
@@ -130,17 +139,33 @@
                                 ?>
                             </select>
 
+
                             <div class="row">
+
                                 <div class="col-md-6">
-                                    <label class="form-label">Effective From *</label>
-                                    <input type="date" name="effective_from" class="form-control mb-3" required>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="form-label">Effective From *</label>
+                                        <span class="error-message text-danger small d-none"></span>
+                                    </div>
+                                    <input type="date" name="effective_from"
+                                        class="form-control mb-3"
+                                        data-required="true"
+                                        data-error="Effective From date is required">
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">Effective To</label>
-                                    <input type="date" name="effective_to" class="form-control mb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="form-label">Effective To *</label>
+                                        <span class="error-message text-danger small d-none"></span>
+                                    </div>
+                                    <input type="date" name="effective_to"
+                                        data-required="true"
+                                        data-error="Effective To date is required"
+                                        class="form-control mb-3">
                                 </div>
+
                             </div>
+
 
                         </div>
 
@@ -170,33 +195,55 @@
 
                         <input type="hidden" name="id" id="editId">
 
-                        <label class="form-label">Employee *</label>
-                        <select name="employee" id="editEmployee" class="form-select mb-3" required>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label class="form-label">Employee *</label>
+                            <span class="error-message text-danger small d-none"></span>
+                        </div>
+                        <select name="employee" id="editEmployee" class="form-select mb-3"
+                                data-required="true" data-error="Please select an employee">
+                            <option value="">Select employee</option>
                             <?php 
                             $query = $connection->query("SELECT id, name FROM employees ORDER BY name");
                             foreach ($query as $emp) echo "<option value='{$emp['id']}'>{$emp['name']}</option>";
                             ?>
                         </select>
 
-                        <label class="form-label">Shift *</label>
-                        <select name="shift" id="editShift" class="form-select mb-3" required>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label class="form-label">Shift *</label>
+                            <span class="error-message text-danger small d-none"></span>
+                        </div>
+                        <select name="shift" id="editShift" class="form-select mb-3"
+                                data-required="true" data-error="Please select a shift">
+                            <option value="">Select shift</option>
                             <?php 
                             $query = $connection->query("SELECT id, name FROM shifts ORDER BY name");
                             foreach ($query as $sh) echo "<option value='{$sh['id']}'>{$sh['name']}</option>";
                             ?>
                         </select>
 
+
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="form-label">Effective From *</label>
-                                <input type="date" name="effective_from" id="editFrom" class="form-control mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="form-label">Effective From *</label>
+                                    <span class="error-message text-danger small d-none"></span>
+                                </div>
+                                <input type="date" name="effective_from" id="editFrom"
+                                    class="form-control mb-3"
+                                    data-required="true" data-error="Effective From date is required">
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Effective To</label>
-                                <input type="date" name="effective_to" id="editTo" class="form-control mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="form-label">Effective To</label>
+                                    <span class="error-message text-danger small d-none"></span>
+                                </div>
+                                <input type="date" name="effective_to" id="editTo"
+                                    class="form-control mb-3" data-required="true" data-error="Effective To date is required">
                             </div>
                         </div>
+
 
                     </div>
 

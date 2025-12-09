@@ -191,8 +191,12 @@
             <form action="add_attendance.php" method="POST">
                 <div class="modal-body">
 
-                    <label class="form-label">Employee *</label>
-                    <select name="employee" class="form-select mb-3" required>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label">Employee *</label>
+                        <span class="error-message text-danger small d-none"></span>
+                    </div>
+                    <select name="employee" class="form-select mb-3"
+                            data-required="true" data-error="Please select an employee">
                         <option value="">Select employee</option>
                         <?php
                             $query = $connection->query("SELECT id,name FROM employees ORDER BY name");
@@ -201,22 +205,41 @@
                     </select>
 
 
-                    <label class="form-label">Date *</label>
-                    <input type="date" name="date" class="form-control mb-3" required>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label">Date *</label>
+                        <span class="error-message text-danger small d-none"></span>
+                    </div>
+                    <input type="date" name="date" class="form-control mb-3"
+                        data-required="true" data-error="Please select a date">
+
 
                     <div class="row">
+
                         <div class="col">
-                            <label>Check In</label>
-                            <input type="time" name="check_in" class="form-control mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Check In</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <input type="time" name="check_in" class="form-control mb-3" data-required="true" data-error="Start Time is required">
                         </div>
+
                         <div class="col">
-                            <label>Check Out</label>
-                            <input type="time" name="check_out" class="form-control mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Check Out</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <input type="time" name="check_out" class="form-control mb-3" data-required="true" data-error="End Time is required">
                         </div>
+
                     </div>
 
-                    <label>Status *</label>
-                    <select name="status" class="form-select" required>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label">Status *</label>
+                        <span class="error-message text-danger small d-none"></span>
+                    </div>
+                    <select name="status" class="form-select mb-3"
+                            data-required="true" data-error="Please select attendance status">
+                        <option value="">Select status</option>
                         <option>Present</option>
                         <option>Absent</option>
                         <option>On Leave</option>
@@ -249,25 +272,35 @@
                 <div class="modal-body">
 
                     <input type="hidden" id="editId" name="id">
+                    
                     <div class="row">
                         <div class="col">
-                            <label>Check In</label>
-                            <input type="time" id="editIn" name="check_in" class="form-control mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Check In</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <input type="time" id="editIn" name="check_in" class="form-control mb-3" data-required="true" data-error="Start Time is required">
                         </div>
                         <div class="col">
-                            <label>Check Out</label>
-                            <input type="time" id="editOut" name="check_out" class="form-control mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Check Out</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <input type="time" id="editOut" name="check_out" class="form-control mb-3" data-required="true" data-error="End Time is required">
                         </div>
                     </div>
-
-                    <label>Status *</label>
-                    <select id="editStatus" name="status" class="form-select">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label">Status *</label>
+                        <span class="error-message text-danger small d-none"></span>
+                    </div>
+                    <select id="editStatus" name="status" class="form-select mb-3"
+                            data-required="true" data-error="Please select a status">
+                        <option value="">Select status</option>
                         <option>Present</option>
                         <option>Absent</option>
                         <option>On Leave</option>
                         <option>Half Day</option>
                     </select>
-
                 </div>
 
                 <div class="modal-footer">

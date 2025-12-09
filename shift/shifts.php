@@ -104,23 +104,42 @@
             <form method="POST" action="add_shift.php">
                 <div class="modal-body">
 
-                    <label class="form-label">Shift Name</label>
-                    <input type="text" name="shift_name" class="form-control mb-3" required>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label">Shift Name</label>
+                        <span class="error-message text-danger small d-none"></span>
+                    </div>
+                    <input type="text" name="shift_name" class="form-control mb-3"
+                        data-required="true" data-error="Shift Name is required">
+
 
                     <div class="row">
                         <div class="col">
-                            <label class="form-label">Start Time</label>
-                            <input type="time" name="start_time" class="form-control mb-3" required>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Start Time</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <input type="time" name="start_time" class="form-control mb-3"
+                                data-required="true" data-error="Start Time is required">
                         </div>
 
                         <div class="col">
-                            <label class="form-label">End Time</label>
-                            <input type="time" name="end_time" class="form-control mb-3" required>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">End Time</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <input type="time" name="end_time" class="form-control mb-3"
+                                data-required="true" data-error="End Time is required">
                         </div>
                     </div>
 
-                    <label class="form-label">Grace Period (minutes)</label>
-                    <input type="number" name="grace_minutes" value="15" class="form-control">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label">Grace Period (minutes)</label>
+                        <span class="error-message text-danger small d-none"></span>
+                    </div>
+                    <input type="number" name="grace_minutes" value="15" class="form-control mb-3"
+                        data-required="true" data-error="Grace period is required">
+
                 </div>
 
                 <div class="modal-footer">
@@ -149,22 +168,47 @@
 
                     <input type="hidden" name="id" id="editShiftId">
 
-                    <label class="form-label">Shift Name</label>
-                    <input type="text" name="shift_name" id="editShiftName" class="form-control mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label">Shift Name</label>
+                        <span class="error-message text-danger small d-none"></span>
+                    </div>
+                    <input type="text" name="shift_name" id="editShiftName"
+                        class="form-control mb-3"
+                        data-required="true" data-error="Shift Name is required">
+
 
                     <div class="row">
                         <div class="col">
-                            <label class="form-label">Start Time</label>
-                            <input type="time" name="start_time" id="editStartTime" class="form-control mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Start Time</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <input type="time" name="start_time" id="editStartTime"
+                                class="form-control mb-3"
+                                data-required="true" data-error="Start Time is required">
                         </div>
+
                         <div class="col">
-                            <label class="form-label">End Time</label>
-                            <input type="time" name="end_time" id="editEndTime" class="form-control mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">End Time</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <input type="time" name="end_time" id="editEndTime"
+                                class="form-control mb-3"
+                                data-required="true" data-error="End Time is required">
                         </div>
                     </div>
 
-                    <label class="form-label">Grace Period (minutes)</label>
-                    <input type="number" name="grace_minutes" id="editGrace" class="form-control">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label">Grace Period (minutes)</label>
+                        <span class="error-message text-danger small d-none"></span>
+                    </div>
+                    <input type="number" name="grace_minutes" id="editGrace"
+                        class="form-control mb-3"
+                        data-required="true" data-error="Grace period is required">
+
+
                 </div>
 
                 <div class="modal-footer">

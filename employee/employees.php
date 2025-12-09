@@ -103,17 +103,34 @@
                     <form action="add_employee.php" method="POST">
                         <div class="modal-body">
 
-                            <label class="form-label">Full Name</label>
-                            <input type="text" name="name" class="form-control mb-3" required>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Full Name</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <input type="text" name="name" class="form-control mb-3" data-required="true" data-error="Employee name is required">
 
-                            <label class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control mb-3" required>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Email</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <input type="text" name="email" class="form-control mb-3" data-required="true" data-error="Employee Email is required">
 
-                            <label class="form-label">Phone</label>
-                            <input type="text" name="phone" class="form-control mb-3" required>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Phone</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <input type="number" name="phone" class="form-control mb-3" data-required="true" data-error="Employee Phone No is required">
 
-                            <select name="department" class="form-select" required>
-                                <option disabled selected>Select Department</option>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Department</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+
+                            <select name="department"
+                                    class="form-select mb-3"
+                                    data-required="true"
+                                    data-error="Please select a department">
+                                <option value="" disabled selected>Select Department</option>
                                 <?php
                                     $dep = $connection->query("SELECT id,name FROM departments ORDER BY name ASC");
                                     foreach ($dep as $d) {
@@ -121,6 +138,7 @@
                                     }
                                 ?>
                             </select>
+
 
 
                         </div>
@@ -150,14 +168,27 @@
 
                             <input type="hidden" name="id" id="editId">
 
-                            <label class="form-label">Full Name</label>
-                            <input type="text" name="name" id="editName" class="form-control mb-3" required>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Full Name</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <input type="text" name="name" id="editName" class="form-control mb-3"
+                                data-required="true" data-error="Employee name is required">
 
-                            <label class="form-label">Email</label>
-                            <input type="email" name="email" id="editEmail" class="form-control mb-3" required>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Email</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <input type="text" name="email" id="editEmail" class="form-control mb-3"
+                                data-required="true" data-error="Employee Email is required">
 
-                            <label class="form-label">Phone</label>
-                            <input type="text" name="phone" id="editPhone" class="form-control mb-3" required>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Phone</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <input type="number" name="phone" id="editPhone" class="form-control mb-3"
+                                data-required="true" data-error="Employee Phone No is required">
+
 
                             <label class="form-label">Department</label>
                             <select name="department" id="editDept" class="form-select" required>
