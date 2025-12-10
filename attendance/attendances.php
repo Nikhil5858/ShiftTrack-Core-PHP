@@ -29,11 +29,9 @@
                 WHERE date = '$today' AND status = 'Present'
             ")->fetch()['total'];
 
-            $absent = $connection->query("
-                SELECT COUNT(*) AS total 
-                FROM attendance 
-                WHERE date = '$today' AND status = 'Absent'
-            ")->fetch()['total'];
+            $totalEmployees = $connection->query("SELECT COUNT(*) AS total FROM employees")->fetch(PDO::FETCH_ASSOC)['total'];
+
+            $absent = $totalEmployees - $present;
 
             $leave = $connection->query("
                 SELECT COUNT(*) AS total 
@@ -117,7 +115,6 @@
             </form>
         </div>
 
-
         <!-- Attendance Table -->
         <div class="card mt-3">
             <table class="table align-middle">
@@ -149,7 +146,7 @@
 
                         $query->execute(['date' => $selectedDate]);
 
-                        foreach($query as $a){
+                            foreach($query as $a){
                     ?>
                         <tr>
                         <td><?= $a['id'] ?></td>
