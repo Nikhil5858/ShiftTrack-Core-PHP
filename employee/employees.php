@@ -51,8 +51,7 @@
                             $query = $connection->query(
                                 "SELECT e.*, d.name AS department_name 
                                      FROM employees e 
-                                     JOIN departments d ON e.department_id = d.id
-                                     ORDER BY e.id DESC");
+                                     JOIN departments d ON e.department_id = d.id");
 
                             foreach ($query as $row){?>
                                 <tr>
