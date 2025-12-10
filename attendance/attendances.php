@@ -1,13 +1,62 @@
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/ShiftTrack/config.php';?>
-<?php include ROOT_PATH . 'includes/navbar.php'; ?>
-<?php include ROOT_PATH . 'includes/sidebar.php'; ?>
-<?php include ROOT_PATH . 'database.php'; ?>
+<?php 
+include $_SERVER['DOCUMENT_ROOT'] . '/ShiftTrack/config.php';
+include ROOT_PATH . 'includes/navbar.php';
+include ROOT_PATH . 'includes/sidebar.php';
+include ROOT_PATH . 'database.php';
 
+$selectedDate = $_GET['date'] ?? date('Y-m-d');
+
+$present = $connection->query("
+    SELECT COUNT(*) AS total 
+    FROM attendance 
+    WHERE date = '$selectedDate' AND status = 'Present'
+")->fetch()['total'];
+
+$totalEmployees = $connection->query("
+    SELECT COUNT(*) AS total 
+    FROM employees
+")->fetch()['total'];
+
+$absent = $totalEmployees - $present;
+
+$leave = $connection->query("
+    SELECT COUNT(*) AS total 
+    FROM attendance 
+    WHERE date = '$selectedDate' AND status = 'On Leave'
+")->fetch()['total'];
+
+$halfday = $connection->query("
+    SELECT COUNT(*) AS total 
+    FROM attendance 
+    WHERE date = '$selectedDate' AND status = 'Half Day'
+")->fetch()['total'];
+
+$query = $connection->prepare("
+    SELECT 
+        e.id AS emp_id,
+        e.name AS employee_name,
+        e.email AS emp_email,
+        d.name AS dept_name,
+        a.id AS attendance_id,
+        a.check_in,
+        a.check_out,
+        a.status,
+        a.late_minutes,
+        a.overtime_minutes
+    FROM employees e
+    JOIN departments d ON e.department_id = d.id
+    LEFT JOIN attendance a 
+        ON a.employee_id = e.id AND a.date = :date
+");
+
+$query->execute(['date' => $selectedDate]);
+
+?>
 
 <div class="main-content">
-    <div class="container-fluid">  
-        
-        <!-- Header Row -->
+    <div class="container-fluid">
+
+        <!-- Page Header -->
         <div class="d-flex justify-content-between align-items-start mt-1">
             <div>
                 <h3>Attendance</h3>
@@ -20,36 +69,9 @@
             </button>
         </div>
 
-        <?php
-            $today = date('Y-m-d');
-
-            $present = $connection->query("
-                SELECT COUNT(*) AS total 
-                FROM attendance 
-                WHERE date = '$today' AND status = 'Present'
-            ")->fetch()['total'];
-
-            $totalEmployees = $connection->query("SELECT COUNT(*) AS total FROM employees")->fetch(PDO::FETCH_ASSOC)['total'];
-
-            $absent = $totalEmployees - $present;
-
-            $leave = $connection->query("
-                SELECT COUNT(*) AS total 
-                FROM attendance 
-                WHERE date = '$today' AND status = 'On Leave'
-            ")->fetch()['total'];
-
-            $halfday = $connection->query("
-                SELECT COUNT(*) AS total 
-                FROM attendance 
-                WHERE date = '$today' AND status = 'Half Day'
-            ")->fetch()['total'];
-        ?>
-
-        <!-- CARDS -->
+        <!-- Summary Cards -->
         <div class="row g-3 ">
 
-            <!-- Present -->
             <div class="col-md-3 col-lg-2">
                 <div class="card stat-card">
                     <div class="card-body text-center">
@@ -62,7 +84,6 @@
                 </div>
             </div>
 
-            <!-- Absent -->
             <div class="col-md-3 col-lg-2">
                 <div class="card stat-card">
                     <div class="card-body text-center">
@@ -75,7 +96,6 @@
                 </div>
             </div>
 
-            <!-- On Leave -->
             <div class="col-md-3 col-lg-2">
                 <div class="card stat-card">
                     <div class="card-body text-center">
@@ -88,7 +108,6 @@
                 </div>
             </div>
 
-            <!-- Half Day -->
             <div class="col-md-3 col-lg-2">
                 <div class="card stat-card">
                     <div class="card-body text-center">
@@ -102,13 +121,13 @@
             </div>
         </div>
 
-        <!-- Filters -->
+        <!-- Date Filter -->
         <div class="card p-3 mt-3">
             <form method="GET">
                 <div class="row g-2">
                     <div class="col-md-3">
                         <input type="date" name="date" class="form-control"
-                            value="<?= $_GET['date'] ?? date('Y-m-d') ?>"
+                            value="<?= $selectedDate ?>"
                             onchange="this.form.submit()">
                     </div>
                 </div>
@@ -133,193 +152,151 @@
                 </thead>
                 <tbody>
 
-                    <?php
-                        $selectedDate = $_GET['date'] ?? date('Y-m-d');
-                        $query = $connection->prepare("
-                            SELECT a.*, e.name AS employee_name, e.email AS emp_email, d.name AS dept_name
-                            FROM attendance a
-                            JOIN employees e ON a.employee_id = e.id
-                            JOIN departments d ON e.department_id = d.id
-                            WHERE a.date = :date
-                            ORDER BY a.id DESC
-                        ");
-
-                        $query->execute(['date' => $selectedDate]);
-
-                            foreach($query as $a){
-                    ?>
+                    <?php foreach ($query as $a): ?>
                         <tr>
-                        <td><?= $a['id'] ?></td>
-                        <td><strong><?= $a['employee_name'] ?></strong><br><small class="text-muted"><?= $a['emp_email'] ?></small></td>
-                        <td><?= $a['dept_name'] ?></td>
-                        <td><?= $a['check_in'] ?></td>
-                        <td><?= $a['check_out'] ?></td>
-                        <td><span class="badge bg-success-subtle text-success"><?= $a['status'] ?></span></td>
-                        <td><?= $a['late_minutes'] ?></td>
-                        <td><?= $a['overtime_minutes'] ?></td>
-                        <td>
-                            <button class="btn btn-outline-primary btn-sm edit-btn"
-                                data-id="<?= $a['id'] ?>"
-                                data-checkin="<?= $a['check_in'] ?>"
-                                data-checkout="<?= $a['check_out'] ?>"
-                                data-status="<?= $a['status'] ?>">
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                        </td>
+                            <td><?= $a['emp_id'] ?></td>
+
+                            <td>
+                                <strong><?= $a['employee_name'] ?></strong><br>
+                                <small class="text-muted"><?= $a['emp_email'] ?></small>
+                            </td>
+
+                            <td><?= $a['dept_name'] ?></td>
+
+                            <td>
+                                <?php if (!$a['check_in']): ?>
+                                    <form method="POST" action="checkin.php">
+                                        <input type="hidden" name="employee_id" value="<?= $a['emp_id'] ?>">
+                                        <button class="btn btn-outline-success btn-sm">
+                                            <i class="bi bi-box-arrow-in-right"></i> Check In
+                                        </button>
+                                    </form>
+                                <?php else: ?>
+                                    <?= date("H:i", strtotime($a['check_in'])) ?>
+                                <?php endif; ?>
+                            </td>
+
+                            <td>
+                                <?php if ($a['check_in'] && !$a['check_out']): ?>
+                                    <form method="POST" action="checkout.php">
+                                        <input type="hidden" name="attendance_id" value="<?= $a['attendance_id'] ?>">
+                                        <button class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-box-arrow-right"></i> Check Out
+                                        </button>
+                                    </form>
+                                <?php elseif ($a['check_out']): ?>
+                                    <?= date("H:i", strtotime($a['check_out'])) ?>
+                                <?php else: ?>
+                                    —
+                                <?php endif; ?>
+                            </td>
+
+                            <td>
+                                <?php if ($a['status']): ?>
+                                    <span class="badge bg-success-subtle text-success"><?= $a['status'] ?></span>
+                                <?php else: ?>
+                                    <span class="badge bg-secondary-subtle text-muted">Not Marked</span>
+                                <?php endif; ?>
+                            </td>
+
+                            <td><?= $a['late_minutes'] ?? 0 ?></td>
+                            <td><?= $a['overtime_minutes'] ?? 0 ?></td>
+
+                            <td>
+                                <?php if ($a['attendance_id']): ?>
+                                    <button class="btn btn-outline-primary btn-sm edit-btn"
+                                        data-id="<?= $a['attendance_id'] ?>"
+                                        data-checkin="<?= $a['check_in'] ?>"
+                                        data-checkout="<?= $a['check_out'] ?>"
+                                        data-status="<?= $a['status'] ?>">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                <?php endif; ?>
+                            </td>
                         </tr>
-                    <?php } ?>
+                    <?php endforeach; ?>
+
                 </tbody>
             </table>
         </div>
 
-    </div>
-</div>
+        <!-- EDIT Attendance Modal -->
+        <div class="modal fade" id="editAttendanceModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
 
-<!-- ADD Attendance Modal -->
-<div class="modal fade" id="addAttendanceModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Attendance</h5>
+                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
 
-            <div class="modal-header">
-                <h5 class="modal-title">Manual Attendance Entry</h5>
-                <button class="btn-close" data-bs-dismiss="modal"></button>
+                    <form action="edit_attendance.php" method="POST">
+                        <div class="modal-body">
+
+                            <input type="hidden" id="editId" name="id">
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="form-label">Check In</label>
+                                        <span class="error-message text-danger small d-none"></span>
+                                    </div>
+                                    <input type="time" id="editIn" name="check_in"
+                                        class="form-control mb-3">
+                                </div>
+
+                                <div class="col">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="form-label">Check Out</label>
+                                        <span class="error-message text-danger small d-none"></span>
+                                    </div>
+                                    <input type="time" id="editOut" name="check_out"
+                                        class="form-control mb-3">
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label">Status *</label>
+                                <span class="error-message text-danger small d-none"></span>
+                            </div>
+                            <select id="editStatus" name="status" class="form-select mb-3">
+                                <option value="">Select status</option>
+                                <option>Present</option>
+                                <option>Absent</option>
+                                <option>On Leave</option>
+                                <option>Half Day</option>
+                            </select>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                            <button class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+
+                </div>
             </div>
-
-            <form action="add_attendance.php" method="POST">
-                <div class="modal-body">
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <label class="form-label">Employee *</label>
-                        <span class="error-message text-danger small d-none"></span>
-                    </div>
-                    <select name="employee" class="form-select mb-3"
-                            data-required="true" data-error="Please select an employee">
-                        <option value="">Select employee</option>
-                        <?php
-                            $query = $connection->query("SELECT id,name FROM employees ORDER BY name");
-                            foreach ($query as $e) echo "<option value='{$e['id']}'>{$e['name']}</option>";
-                        ?>
-                    </select>
-
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <label class="form-label">Date *</label>
-                        <span class="error-message text-danger small d-none"></span>
-                    </div>
-                    <input type="date" name="date" class="form-control mb-3"
-                        data-required="true" data-error="Please select a date">
-
-
-                    <div class="row">
-
-                        <div class="col">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <label class="form-label">Check In</label>
-                                <span class="error-message text-danger small d-none"></span>
-                            </div>
-                            <input type="time" name="check_in" class="form-control mb-3" data-required="true" data-error="Start Time is required">
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <label class="form-label">Check Out</label>
-                                <span class="error-message text-danger small d-none"></span>
-                            </div>
-                            <input type="time" name="check_out" class="form-control mb-3" data-required="true" data-error="End Time is required">
-                        </div>
-
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <label class="form-label">Status *</label>
-                        <span class="error-message text-danger small d-none"></span>
-                    </div>
-                    <select name="status" class="form-select mb-3"
-                            data-required="true" data-error="Please select attendance status">
-                        <option value="">Select status</option>
-                        <option>Present</option>
-                        <option>Absent</option>
-                        <option>On Leave</option>
-                        <option>Half Day</option>
-                    </select>
-
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary">Save</button>
-                </div>
-            </form>
-
         </div>
+
+
     </div>
 </div>
 
-<!-- EDIT Attendance Modal -->
-<div class="modal fade" id="editAttendanceModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h5 class="modal-title">Edit Attendance</h5>
-                <button class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <form action="edit_attendance.php" method="POST">
-                <div class="modal-body">
-
-                    <input type="hidden" id="editId" name="id">
-                    
-                    <div class="row">
-                        <div class="col">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <label class="form-label">Check In</label>
-                                <span class="error-message text-danger small d-none"></span>
-                            </div>
-                            <input type="time" id="editIn" name="check_in" class="form-control mb-3" data-required="true" data-error="Start Time is required">
-                        </div>
-                        <div class="col">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <label class="form-label">Check Out</label>
-                                <span class="error-message text-danger small d-none"></span>
-                            </div>
-                            <input type="time" id="editOut" name="check_out" class="form-control mb-3" data-required="true" data-error="End Time is required">
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <label class="form-label">Status *</label>
-                        <span class="error-message text-danger small d-none"></span>
-                    </div>
-                    <select id="editStatus" name="status" class="form-select mb-3"
-                            data-required="true" data-error="Please select a status">
-                        <option value="">Select status</option>
-                        <option>Present</option>
-                        <option>Absent</option>
-                        <option>On Leave</option>
-                        <option>Half Day</option>
-                    </select>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary">Save</button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
 
 <script>
     document.querySelectorAll(".edit-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-
             document.getElementById("editId").value = btn.dataset.id;
-            document.getElementById("editIn").value = btn.dataset.checkin || "";
-            document.getElementById("editOut").value = btn.dataset.checkout || "";
+            let ci = btn.dataset.checkin ? btn.dataset.checkin.slice(0,5) : "";
+            let co = btn.dataset.checkout ? btn.dataset.checkout.slice(0,5) : "";
+
+            document.getElementById("editIn").value = ci;
+            document.getElementById("editOut").value = co;
             document.getElementById("editStatus").value = btn.dataset.status;
 
             new bootstrap.Modal(document.getElementById("editAttendanceModal")).show();
         });
     });
 </script>
+
